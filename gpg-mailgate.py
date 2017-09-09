@@ -437,7 +437,10 @@ def encrypt_all_payloads_mime( message, gpg_to_cmdline ):
 		# it's skipping an imaginary blank line someplace. (ie skipping a header)
 		# Workaround it here by prepending a blank line.
 		# This happens only on text only messages.
-		submsg2.set_payload("\n" + message.get_payload(decode=True))
+		additionalSubHeader=""
+		if message.has_key('Content-Type') and not message['Content-Type'].startswith('multipart'):
+			additionalSubHeader="Content-Type: "+message['Content-Type']+"\n"
+		submsg2.set_payload(additionalSubHeader+"\n" +message.get_payload(decode=True))
 		check_nested = True
 	else:
 		processed_payloads = generate_message_from_payloads(message)
