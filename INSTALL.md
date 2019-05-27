@@ -63,8 +63,12 @@ These instructions are based on an installation on an Ubuntu 14.04 LTS virtual m
 8. Add the following line to `/etc/postfix/main.cf`
 
         content_filter = gpg-mailgate
-  
-9. Restart Postfix
+
+9. Optional: GPG can automatically download new public keys for automatic signature verification. To enable automatic create the file `/var/gpgmailgate/.gnupg/gpg.conf`. Add the following line to the file:
+
+        keyserver-options auto-key-retrieve
+
+10. Restart Postfix
 
 You are now ready to go. To add a public key for encryption just use the following command:
         
