@@ -627,6 +627,8 @@ def send_msg( message, recipients ):
 		log("Sending email to: <%s>" % '> <'.join( recipients ))
 		relay = (cfg['relay']['host'], int(cfg['relay']['port']))
 		smtp = smtplib.SMTP(relay[0], relay[1])
+                if cfg.has_key('relay') and cfg['relay'].has_key('starttls') and cfg['relay']['starttls'] == 'yes':
+                    smtp.starttls()
 		smtp.sendmail( from_addr, recipients, message )
 	else:
 		log("No recipient found")
