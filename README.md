@@ -1,8 +1,32 @@
-# gpg-mailgate
+# GPG Lacre Project
 
-gpg-mailgate is a content filter for Postfix that automatically encrypts unencrypted incoming email using PGP or S/MIME for select recipients. It is also able to decrypt incoming PGP mails.
+Fork and continuation of original work of gpg-mailgate project: https://github.com/fkrone/gpg-mailgate
 
+
+Lacre (wax seal in Portuguese) is a content filter for Postfix that automatically encrypts unencrypted incoming email using PGP or S/MIME for select recipients. 
+This project is the continuation of the work of "gpg-mailfate" on providing open source, GnuPG based email encryption for emails at rest. All incoming emails are automatically encrypted with user's public key before they are saved on the server. It is a server side encryption solution while the control of the encryption keys are fully at the hands of the end-user and private keys are never stored on the server. 
+
+The scope of the project is to improve on the already existing code, provide easy to use key upload system (standalone as well as Roundcube plugin) and key discoverability. Beside providing a solution that is easy to use we will also provide easy to digest material about encryption, how it works and how to make use of it in situations other the just mailbox encryption. Understanding how encryption works is the key to self-determination and is therefore an important part of the project. 
+
+GPG Lacre will be battle tested on the email infrastructure of https://disroot.org (an ethical non-profit service provider).
+---
+
+The work on this project in 2021 is funded by https://nlnet.nl/thema/NGIZeroPET.html for which we are very thankful.
+The sope of the work for 2021 is:
+ - Rewrite code to python3
+ - Improve standalone key upload website
+ - Provide Roundcube plugin for key management
+ - Improve key server features
+ - Provide webiste with information and tutorials on how to use gpg in general and also "lacre"
+ - (optional) provide autocrypt support
+
+Made possible thanks to:
+![](https://nlnet.nl/logo/banner.png)
+
+---
 For installation instructions, please refer to the included INSTALL file.
+
+---
 
 # Features
 - Correctly displays attachments and general email content; currently will only display first part of multipart messages
@@ -19,7 +43,7 @@ This is forked from the original project at http://code.google.com/p/gpg-mailgat
 
 # Authors
 
-This is a combined work of many developers and contributors:
+This is a combined work of many developers and contributors. We would like to pay honours to original gpg mailbox developers for making this project happen, and providing solid solution for encryption emails at rest:
 
 * mcmaster <mcmaster@aphrodite.hurricanelabs.rsoc>
 * Igor Rzegocki <ajgon@irgon.com> - [GitHub](https://github.com/ajgon/gpg-mailgate)
@@ -33,8 +57,3 @@ This is a combined work of many developers and contributors:
 * Kiritan Flux [GitHub](https://github.com/kflux)
 * Fabian Krone [GitHub] (https://github.com/fkrone/gpg-mailgate)
 
-# To Do
-
-* rename from gpg-mailgate to openpgp-s-mime-mailgate or something.....
-* find a better solution for an own user instead of the user `nobody`
-* make PGP/INLINE decryption more reliable
