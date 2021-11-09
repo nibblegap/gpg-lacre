@@ -8,8 +8,6 @@ import difflib
 import ConfigParser
 import logging
 
-TEST_PORT = 2500
-
 EOL = "\n"
 
 RELAY_SCRIPT = "test/relay.py"
@@ -66,17 +64,17 @@ def compare(result, expected):
                                 fromfile='expected',
                                 tofile='output')
 
-def report_result(message_file, test_output):
-    expected = load_file(message_file)
+def report_result(message_file, expected_file, test_output):
+    expected = load_file(expected_file)
     diff = compare(test_output, expected)
     if len(list(diff)) > 0:
-        print "Output and the expected message don't match:"
+        print "Output and the expected message (%s) don't match:" % (expected_file)
     else:
         print "Message %s processed properly" % (message_file)
     for diff_line in diff:
         print diff_line
 
-def execute_e2e_test(message_file, **kwargs):
+def execute_e2e_test(message_file, expected_file, **kwargs):
     test_command = "%s gpg-mailgate.py %s < %s" % (PYTHON_BIN, kwargs["from_addr"], message_file)
     result_command = "%s %s %d" % (PYTHON_BIN, RELAY_SCRIPT, kwargs["port"])
 
@@ -93,18 +91,30 @@ def execute_e2e_test(message_file, **kwargs):
 
     logging.debug("Read %d characters of test output: '%s'" % (len(testout), testout))
 
-    report_result(message_file, testout)
+    report_result(message_file, expected_file, testout)
 
+def load_config():
+    cp = ConfigParser.ConfigParser()
+    cp.read("test/e2e.ini")
+
+    return cp
+
+
+config = load_config()
 
 logging.basicConfig(filename	= "e2e_test.log",
+                    format		= "%(pathname)s:%(lineno)d %(levelname)s [%(funcName)s] %(message)s",
                     datefmt		= "%Y-%m-%d %H:%M:%S",
                     level		= logging.DEBUG)
 
 write_test_config(os.getcwd() + "/" + CONFIG_FILE,
-                  port				= TEST_PORT,
+                  port				= config.getint("relay", "port"),
                   gpg_keyhome		= "test/keyhome",
                   smime_certpath	= "test/certs")
 
-execute_e2e_test("test.msg",
-                 from_addr	= "alice@localhost",
-                 port			= TEST_PORT)
+for case_no in range(1, config.getint("tests", "cases")+1):
+    case_name = "case-%d" % (case_no)
+
+    execute_e2e_test(config.get(case_name, "in"), config.get(case_name, "out"),
+                    from_addr	= config.get(case_name, "from"),
+                    port		= config.getint("relay", "port"))
